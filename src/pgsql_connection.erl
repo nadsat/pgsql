@@ -774,8 +774,9 @@ pgsql_simple_query(Query, QueryOptions, Timeout, From, #state{socket = {SockModu
 % (unless it is a rollback).
 % If set succeeded within a transaction, but the query failed, the reset may
 % fail but set only applies to the transaction anyway.
--spec set_succeeded_or_within_failed_transaction({set, []} | {error, pgsql_error:pgsql_error()}) -> boolean().
+-spec set_succeeded_or_within_failed_transaction({set, []} | {error, pgsql_error:pgsql_error()}|{error,closed}) -> boolean().
 set_succeeded_or_within_failed_transaction({set, []}) -> true;
+set_succeeded_or_within_failed_transaction({error, closed}) -> true;
 set_succeeded_or_within_failed_transaction({error, {pgsql_error, _} = Error}) ->
     pgsql_error:is_in_failed_sql_transaction(Error).
 
